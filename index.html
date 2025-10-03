@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     html{scroll-behavior:smooth} body{font-family:'Inter',sans-serif}
-    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer; outline: none;}
+    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.65rem 1.1rem;font-size:.9375rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer; outline: none; min-height: 44px;}
     .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
     .pill:focus-visible { box-shadow: 0 0 0 2px #0b0f14, 0 0 0 4px #6ee7b7; }
     .pill.is-active{
@@ -40,6 +40,17 @@
     .glass-card::after { pointer-events: none; }
     .num-cell{white-space:nowrap}
     #advancedSection { transition: all 0.3s ease-in-out; }
+    .offer-input { min-height: 48px; }
+    
+    @media (max-width: 640px) {
+      .glass-card { margin: 0 -1rem; border-radius: 1.5rem; }
+      #calculator { padding-bottom: 3rem; }
+      .result-card { padding: 1rem !important; }
+      h1 { font-size: 2.25rem !important; line-height: 1.2; }
+      .pill { padding: .7rem 1rem; font-size: .875rem; }
+      table { font-size: .8125rem; }
+      #futureValue { font-size: 2.5rem !important; }
+    }
   </style>
 </head>
 <body class="min-h-screen bg-[#0b0f14] text-white">
@@ -52,7 +63,7 @@
   <section class="relative h-[52vh] min-h-[520px] w-full flex items-center justify-center pt-16">
     <div class="mx-auto max-w-6xl w-full px-4 sm:px-6">
       <div class="max-w-3xl">
-        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">Analyze Your <span class="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">Startup Offer</span></h1>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">Analyze Your <span class="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">Startup Offer</span></h1>
         <p class="mt-4 text-lg md:text-xl text-white/80">See the real value of your salary and equity across future rounds and potential exits.</p>
         <div class="mt-6 flex gap-3">
           <a href="#calculator" class="rounded-full bg-white text-black px-5 py-2.5 text-sm font-semibold hover:bg-white/90 transition-colors">Start Calculating</a>
@@ -68,18 +79,18 @@
                   before:absolute before:inset-0 before:rounded-3xl before:p-[1px] before:[background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.06))]
                   before:[-webkit-mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] before:[-webkit-mask-composite:xor] before:mask-composite:exclude
                   after:absolute after:inset-0 after:rounded-[calc(1.5rem-1px)] after:ring-1 after:ring-white/10">
-        <div class="p-6 md:p-10">
+        <div class="p-4 sm:p-6 md:p-10">
           <!-- Simple Inputs -->
           <div class="space-y-6">
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-3 gap-4 md:gap-6">
               <div>
-                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Salary ($)</label>
+                <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Salary ($)</label>
                 <input id="salary" type="text"
                   class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
                   value="120,000" placeholder="120,000">
               </div>
               <div>
-                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Equity Grant (%)</label>
+                <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Equity Grant (%)</label>
                 <div class="relative mt-2">
                   <input id="yourOwnership" type="text"
                     class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 pr-10 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
@@ -89,18 +100,18 @@
                 <p id="equity-hint" class="mt-1 text-[11px] text-white/50">Tip: 0.25 = 0.25%</p>
               </div>
               <div>
-                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Last Company Valuation ($)</label>
+                <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Last Company Valuation ($)</label>
                 <input id="companyValuation" type="text"
                   class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
                   value="25,000,000">
               </div>
             </div>
             <div>
-              <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Potential Exit Valuation ($)</label>
+              <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Potential Exit Valuation ($)</label>
               <input id="exitValuation" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="1,000,000,000">
             </div>
             <div>
-              <span id="stage-label" class="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
+              <span id="stage-label" class="block text-sm font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
               <div id="stagePills" role="group" aria-labelledby="stage-label" class="flex flex-wrap gap-2">
                 <button type="button" data-value="pre-seed"  class="pill" aria-pressed="false">Pre-Seed</button>
                 <button type="button" data-value="seed"      class="pill" aria-pressed="false">Seed</button>
@@ -116,13 +127,13 @@
           <!-- Primary Results (always visible) -->
           <div class="my-8 h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5 result-card">
               <div class="text-sm uppercase tracking-wider text-white/60">Total 1st Year Comp</div>
               <div id="totalComp" class="text-3xl font-bold" aria-live="polite">$145,000</div>
               <div class="text-xs text-white/50">Salary + value of <strong>vested</strong> equity today</div>
               <div class="text-xs text-white/50" id="vestedNote"></div>
             </div>
-            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5 result-card">
               <div class="flex items-baseline justify-between">
                 <span class="text-sm uppercase tracking-wider text-white/60">Est. Ownership at Exit</span>
                 <span id="dilutedOwnership" class="text-xl font-semibold">0.06%</span>
@@ -132,7 +143,7 @@
               <div id="afterTax" class="text-sm text-white/70" aria-live="polite"></div>
               <div id="presentValue" class="text-sm text-white/70" aria-live="polite"></div>
             </div>
-             <div class="md:col-span-2 space-y-3 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+             <div class="md:col-span-2 space-y-3 rounded-2xl border border-white/15 bg-white/[0.04] p-4 md:p-5 overflow-x-auto result-card">
               <div class="text-sm uppercase tracking-wider text-white/60">Exit Scenarios</div>
               <table class="w-full text-sm">
                 <thead class="text-white/60 border-b border-white/20">
@@ -162,54 +173,54 @@
                       <input type="radio" name="valBasis" value="post" class="accent-emerald-400"> Use last round post-money
                   </label>
               </div>
-              <div class="grid md:grid-cols-4 gap-6">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Vesting (years)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Vesting (years)</label>
                   <input id="vestingYears" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="4">
                 </div>
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Cliff (months)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Cliff (months)</label>
                   <input id="cliffMonths" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="12">
                 </div>
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Months Served</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Months Served</label>
                   <input id="monthsServed" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="0">
                 </div>
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Fully Diluted Shares (optional)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Fully Diluted Shares (optional)</label>
                   <input id="fdShares" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 50,000,000">
                 </div>
               </div>
-              <div class="grid md:grid-cols-4 gap-6">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">409A FMV ($/share)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">409A FMV ($/share)</label>
                   <input id="fmv" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 1.25">
                 </div>
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Strike Price ($/share)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Strike Price ($/share)</label>
                   <input id="strike" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 0.20">
                 </div>
                 <div>
-                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Tax Estimate (%)</label>
+                  <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Tax Estimate (%)</label>
                   <input id="taxPct" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="0">
                 </div>
                  <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Pref Stack ($, 1× non-participating)</label>
+                    <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Pref Stack ($, 1× non-participating)</label>
                     <input id="prefStack" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 50,000,000">
                 </div>
               </div>
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid md:grid-cols-2 gap-4 md:gap-6">
                   <label class="flex flex-col">
-                    <span class="text-xs uppercase tracking-wider text-white/60">Years to Exit</span>
+                    <span class="text-sm font-medium uppercase tracking-wider text-white/60">Years to Exit</span>
                     <input id="yearsToExit" class="offer-input mt-2 rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-white" value="5">
                   </label>
                   <label class="flex flex-col">
-                    <span class="text-xs uppercase tracking-wider text-white/60">Discount Rate %</span>
+                    <span class="text-sm font-medium uppercase tracking-wider text-white/60">Discount Rate %</span>
                     <input id="discRate" class="offer-input mt-2 rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-white" value="12">
                   </label>
               </div>
               <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
-                <div class="text-sm uppercase tracking-wider text-white/60 mb-2">Editable Dilution Assumptions</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-white/60 mb-2">Editable Dilution Assumptions</div>
                 <div class="grid sm:grid-cols-5 gap-3 text-sm">
                   <label class="flex flex-col">Seed % <input id="dSeed" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="22"></label>
                   <label class="flex flex-col">A % <input id="dA" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="20"></label>
@@ -224,7 +235,7 @@
                  <div id="dilutionBand" class="text-sm text-white/70 mt-1"></div>
               </div>
               <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
-                <div class="text-sm uppercase tracking-wider text-white/60 mb-2">Vesting Timeline (current value basis)</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-white/60 mb-2">Vesting Timeline (current value basis)</div>
                 <table class="w-full text-sm">
                   <thead class="text-white/60">
                     <tr><th class="text-left font-medium py-1">Month</th><th class="text-right font-medium py-1">Vested %</th><th class="text-right font-medium py-1">Current $</th></tr>
@@ -243,8 +254,8 @@
   </main>
 
   <footer class="mt-16 pb-10 text-center text-white/40 text-xs">
-    <div class="flex flex-col items-center gap-4">
-        <div class="flex flex-col md:flex-row items-center gap-2 md:gap-x-4 text-sm text-white/70">
+    <div class="flex flex-col items-center gap-3">
+        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-x-4 text-base md:text-sm text-white/70">
              <a href="https://www.spicecapital.xyz/" target="_blank" rel="noopener" class="hover:text-white transition-colors">
                 Created by Spice Capital
             </a>
