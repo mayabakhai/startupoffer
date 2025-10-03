@@ -22,9 +22,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     html{scroll-behavior:smooth} body{font-family:'Inter',sans-serif}
-    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer}
-    .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
-    .pill.is-active{border-color:rgba(110,231,183,.5);color:#fff;background:rgba(255,255,255,.1)}
+    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer; outline: none;}
+    .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
+    .pill:focus-visible { box-shadow: 0 0 0 2px #0b0f14, 0 0 0 4px #6ee7b7; }
+    .pill.is-active{
+        background-color: #34d399; /* emerald-400 */
+        border-color: #34d399;
+        color: #0b0f14;
+        font-weight: 600;
+    }
+    .pill.is-active:hover {
+        background-color: #10b981; /* emerald-500 */
+        border-color: #10b981;
+    }
     .glass-card{-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
     .glass-card::before,
     .glass-card::after { pointer-events: none; }
@@ -256,7 +266,7 @@
 </footer>
 
   <script>
-(function() {
+    (function() {
         // ============== Elements ==============
         const salaryEl = document.getElementById('salary');
         const ownEl = document.getElementById('yourOwnership');
@@ -267,7 +277,8 @@
         const taxEl = document.getElementById('taxPct');
         const exitEl = document.getElementById('exitValuation');
         const prefEl = document.getElementById('prefStack');
-        const fundingStageEl = document.getElementById('fundingStage');
+        const stagePills = document.getElementById('stagePills');
+        const fundingStageEl = document.getElementById('fundingStage');
         const vestYearsEl = document.getElementById('vestingYears');
         const cliffEl = document.getElementById('cliffMonths');
         const servedEl = document.getElementById('monthsServed');
@@ -359,7 +370,7 @@
             const taxPct = clampPercent(parseNumber(taxEl.value));
             const exitVal = parseNumber(exitEl.value);
             const prefStack = parseNumber(prefEl.value);
-            const stageKey = document.getElementById('fundingStage').value; // Use the hidden input for pills
+            const stageKey = fundingStageEl.value;
             const vestYears = parseNumber(vestYearsEl.value);
             const cliffMonths = parseNumber(cliffEl.value);
             const servedMonths = parseNumber(servedEl.value);
@@ -458,12 +469,11 @@
             });
         });
 
-        const stagePills = document.getElementById('stagePills');
-        stagePills.addEventListener('click', e=>{
+        stagePills.addEventListener('click', e=>{
             const btn=e.target.closest('button[data-value]'); if(!btn) return;
             stagePills.querySelectorAll('.pill').forEach(b=>{ b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
             btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
-            document.getElementById('fundingStage').value=btn.dataset.value; calculate();
+            fundingStageEl.value=btn.dataset.value; calculate();
         });
 
         document.querySelectorAll('input.offer-input').forEach(input=>{
