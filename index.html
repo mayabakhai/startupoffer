@@ -30,6 +30,7 @@
     .glass-card::before,.glass-card::after { pointer-events: none; }
     .num-cell{white-space:nowrap}
     #advancedSection { transition: all 0.3s ease-in-out; }
+    #explorerContent { transition: all 0.3s ease-in-out; }
     .offer-input { min-height: 48px; }
     
     @media (max-width: 640px) {
@@ -133,6 +134,90 @@
             </div>
           </div>
 
+          <!-- ========== NEW: CASH VS EQUITY EXPLORER ========== -->
+          <div class="mt-8">
+            <div class="rounded-2xl border border-white/15 bg-white/[0.04] overflow-hidden">
+              <button id="toggleExplorer" type="button" class="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-base font-semibold text-left">Should I negotiate for more cash or more equity?</span>
+                </div>
+                <svg id="explorerChevron" class="w-5 h-5 text-white/40 transform transition-transform group-hover:text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div id="explorerContent" class="hidden border-t border-white/10 p-5 md:p-6 space-y-6">
+                <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
+                  <p class="text-sm text-white/80 leading-relaxed">
+                    Based on your stage (<strong id="explorerStage" class="text-white">Series A</strong>), a typical exit takes <strong id="explorerYears" class="text-white">~6 years</strong>. 
+                    The slider below shows how different salary/equity mixes would affect your total wealth at exit.
+                  </p>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex items-center gap-4">
+                    <div class="flex-1">
+                      <input id="mixSlider" type="range" min="0" max="100" value="50" 
+                        class="w-full h-3 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full appearance-none cursor-pointer
+                               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 
+                               [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-lg
+                               [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-slate-700
+                               [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full 
+                               [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:border-2 
+                               [&::-moz-range-thumb]:border-slate-700 [&::-moz-range-thumb]:cursor-pointer">
+                    </div>
+                  </div>
+                  
+                  <div class="flex justify-between text-xs text-white/50">
+                    <span>Higher salary, less equity</span>
+                    <span>Lower salary, more equity</span>
+                  </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-emerald-900/40 to-blue-900/40 border-2 border-emerald-500/30 rounded-2xl p-6 text-center">
+                  <div class="text-sm text-emerald-300 mb-2">Total Wealth at Exit (<span id="explorerYearsDisplay">~6 years</span>)</div>
+                  <div id="explorerTotalWealth" class="text-5xl font-extrabold mb-3">$1,320,000</div>
+                  <div id="explorerWealthChange" class="text-sm text-white/70"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div class="rounded-xl border border-white/15 bg-white/[0.04] p-5 space-y-3">
+                    <div class="text-xs uppercase tracking-wider text-white/60">Guaranteed Cash</div>
+                    <div>
+                      <div id="explorerNewSalary" class="text-2xl font-bold mb-1">$120,000/yr</div>
+                      <div id="explorerTotalCash" class="text-sm text-white/50">$720,000 over 6 years</div>
+                    </div>
+                    <div id="explorerSalaryChange" class="text-xs font-medium px-2 py-1 rounded inline-block"></div>
+                  </div>
+
+                  <div class="rounded-xl border border-white/15 bg-white/[0.04] p-5 space-y-3">
+                    <div class="text-xs uppercase tracking-wider text-white/60">Equity Value at Exit</div>
+                    <div>
+                      <div id="explorerNewEquity" class="text-2xl font-bold mb-1">0.10%</div>
+                      <div id="explorerEquityValue" class="text-sm text-white/50">$600,000 after dilution</div>
+                    </div>
+                    <div id="explorerEquityChange" class="text-xs font-medium px-2 py-1 rounded inline-block"></div>
+                  </div>
+                </div>
+
+                <div class="bg-amber-900/20 border border-amber-500/30 rounded-xl p-4">
+                  <div class="flex gap-3">
+                    <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-sm text-white/80 space-y-2">
+                      <p><strong class="text-white">Remember:</strong> This assumes the company hits your exit target. Reality: most startups fail, some 10x their targets.</p>
+                      <p class="text-xs text-white/50">Typical negotiation ranges: ±20% on salary, ±30% on equity. Extreme shifts are rarely accepted.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="text-center pt-8">
             <button id="toggleAdvanced" type="button" class="group text-emerald-300 hover:text-emerald-200 text-sm font-semibold flex items-center gap-2 mx-auto">
               <span id="toggleText">Show Advanced Options</span>
@@ -170,7 +255,6 @@
               </div>
             </div>
 
-            <!-- NEW: ESOP Dollar + Standard Fields -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               <div>
                 <label class="block text-sm font-medium uppercase tracking-wider text-white/60">ESOP Dollar Value ($)</label>
@@ -191,7 +275,6 @@
               </div>
             </div>
 
-            <!-- NEW: Cash Compensation Fields -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
               <div>
                 <label class="block text-sm font-medium uppercase tracking-wider text-white/60">Target Bonus (%)</label>
@@ -211,7 +294,6 @@
               </div>
             </div>
 
-            <!-- NEW: Year-1 Cash Display -->
             <div id="year1CashWrap" class="rounded-2xl border border-white/15 bg-white/[0.04] p-4 hidden">
               <div class="text-sm font-medium uppercase tracking-wider text-white/60 mb-1">Year-1 Total Cash</div>
               <div id="year1Cash" class="text-xl font-semibold text-emerald-300"></div>
@@ -241,7 +323,6 @@
               <p class="mt-2 text-xs text-white/60">Top-up is added to each applicable round as extra dilution.</p>
             </div>
 
-            <!-- NEW: RSU Section (Optional) -->
             <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
               <div class="flex items-center justify-between mb-4">
                 <div class="text-sm font-medium uppercase tracking-wider text-white/60">RSU Modeling (Public Companies)</div>
@@ -378,7 +459,6 @@
         const valMode = document.getElementById('valMode');
         const advancedSection = document.getElementById('advancedSection');
 
-        // NEW: Additional elements for new features
         const esopDollarEl = document.getElementById('esopDollar');
         const esopHintEl = document.getElementById('esopHint');
         const bonusPctEl = document.getElementById('bonusPct');
@@ -392,6 +472,23 @@
         const stockPriceEl = document.getElementById('stockPrice');
         const stockGrowthPctEl = document.getElementById('stockGrowthPct');
         const rsuTBody = document.getElementById('rsuTBody');
+
+        // NEW: Explorer elements
+        const toggleExplorer = document.getElementById('toggleExplorer');
+        const explorerChevron = document.getElementById('explorerChevron');
+        const explorerContent = document.getElementById('explorerContent');
+        const explorerStage = document.getElementById('explorerStage');
+        const explorerYears = document.getElementById('explorerYears');
+        const explorerYearsDisplay = document.getElementById('explorerYearsDisplay');
+        const mixSlider = document.getElementById('mixSlider');
+        const explorerTotalWealth = document.getElementById('explorerTotalWealth');
+        const explorerWealthChange = document.getElementById('explorerWealthChange');
+        const explorerNewSalary = document.getElementById('explorerNewSalary');
+        const explorerTotalCash = document.getElementById('explorerTotalCash');
+        const explorerNewEquity = document.getElementById('explorerNewEquity');
+        const explorerEquityValue = document.getElementById('explorerEquityValue');
+        const explorerSalaryChange = document.getElementById('explorerSalaryChange');
+        const explorerEquityChange = document.getElementById('explorerEquityChange');
 
         // ============== Helpers ==============
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -460,8 +557,36 @@
             return order.map(k => Math.min(0.99, map[k] || 0));
         }
 
+        function calculateDilutedOwnership(grantPct, stageKey) {
+            const dilutions = roundDilution(stageKey);
+            let ownership = grantPct / 100;
+            dilutions.forEach(d => {
+                ownership *= (1 - d);
+            });
+            return ownership;
+        }
+
+        const stageDisplayMap = {
+            'pre-seed': 'Pre-Seed',
+            'seed': 'Seed',
+            'series-a': 'Series A',
+            'series-b': 'Series B',
+            'series-c': 'Series C',
+            'series-d': 'Series D+'
+        };
+
+        const yearsToExitMap = {
+            'pre-seed': 8,
+            'seed': 7,
+            'series-a': 6,
+            'series-b': 5,
+            'series-c': 4,
+            'series-d': 3
+        };
+
         // ============== Calculation ==============
         let valuationBasis = '409a';
+        let explorerData = {};
 
         function calculate(){
             const salary = parseNumber(salaryEl.value);
@@ -478,7 +603,6 @@
             const cliffMonths = parseNumber(cliffEl.value);
             const servedMonths = parseNumber(servedEl.value);
 
-            // NEW: ESOP dollar → % inference (runs only if % is 0 and ESOP$ is filled)
             const esopDollar = Math.max(0, parseNumber(esopDollarEl?.value || '0'));
             if ((grantPct === 0 || !Number.isFinite(grantPct)) && esopDollar > 0){
                 if (fmv > 0 && fdShares > 0){
@@ -563,7 +687,6 @@
                 </tr>`;
             }).join('');
 
-            // NEW: Year-1 cash calculation
             const bonusPct = clampPercent(parseNumber(bonusPctEl?.value || '0'));
             const signOn = Math.max(0, parseNumber(signOnEl?.value || '0'));
             const relocation = Math.max(0, parseNumber(relocationEl?.value || '0'));
@@ -576,7 +699,6 @@
                 if(year1CashWrap) year1CashWrap.classList.add('hidden');
             }
 
-            // NEW: RSU modeling
             if (rsuEnableEl?.checked){
                 const baseSalary = Math.max(0, parseNumber(salaryEl.value));
                 const baseBonus$ = baseSalary * (bonusPct/100);
@@ -615,6 +737,118 @@
             } else {
                 if(rsuTBody) rsuTBody.innerHTML='';
             }
+
+            // Store data for explorer
+            explorerData = {
+                salary,
+                grantPct,
+                companyVal,
+                exitVal,
+                prefStack,
+                stageKey,
+                exerciseCost: (grantedShares && strike) ? (grantedShares * strike) : 0,
+                taxPct
+            };
+
+            updateExplorer();
+        }
+
+        function updateExplorer() {
+            if (!explorerContent || explorerContent.classList.contains('hidden')) return;
+
+            const { salary, grantPct, companyVal, exitVal, prefStack, stageKey, exerciseCost, taxPct } = explorerData;
+            
+            const stageDisplay = stageDisplayMap[stageKey] || 'Series A';
+            const yearsToExit = yearsToExitMap[stageKey] || 6;
+            
+            if (explorerStage) explorerStage.textContent = stageDisplay;
+            if (explorerYears) explorerYears.textContent = `~${yearsToExit} years`;
+            if (explorerYearsDisplay) explorerYearsDisplay.textContent = `~${yearsToExit} years`;
+
+            const baseEquityFraction = grantPct / 100;
+            const baseEquityValue = companyVal * baseEquityFraction;
+            const budget = salary + baseEquityValue;
+
+            const baseDilutedOwnership = calculateDilutedOwnership(grantPct, stageKey);
+            const commonPool = Math.max(0, exitVal - (prefStack || 0));
+            const baseEquityAtExit = commonPool * baseDilutedOwnership;
+            const baseNetEquity = Math.max(0, baseEquityAtExit - exerciseCost);
+            const baseNetEquityAfterTax = baseNetEquity * (1 - taxPct/100);
+            const baseTotalWealth = (salary * yearsToExit) + baseNetEquityAfterTax;
+
+            const salaryPct = parseFloat(mixSlider.value);
+            const newSalary = budget * (salaryPct / 100);
+            const totalCash = newSalary * yearsToExit;
+            
+            const newEquityYr1Value = Math.max(0, budget - newSalary);
+            
+            let newEquityPct = 0;
+            if (companyVal > 0) {
+                newEquityPct = (newEquityYr1Value / companyVal) * 100;
+            }
+            
+            const newDilutedOwnership = calculateDilutedOwnership(newEquityPct, stageKey);
+            const newEquityAtExit = commonPool * newDilutedOwnership;
+            const newNetEquity = Math.max(0, newEquityAtExit - exerciseCost);
+            const newNetEquityAfterTax = newNetEquity * (1 - taxPct/100);
+            
+            const totalWealth = totalCash + newNetEquityAfterTax;
+            const wealthDiff = totalWealth - baseTotalWealth;
+
+            if (explorerTotalWealth) explorerTotalWealth.textContent = fmtShortCur(totalWealth);
+            
+            if (explorerWealthChange) {
+                if (Math.abs(wealthDiff) < 1000) {
+                    explorerWealthChange.textContent = 'Same as current offer';
+                    explorerWealthChange.className = 'text-sm text-white/70';
+                } else if (wealthDiff > 0) {
+                    explorerWealthChange.textContent = '+' + fmtShortCur(wealthDiff) + ' more than current';
+                    explorerWealthChange.className = 'text-sm text-emerald-400';
+                } else {
+                    explorerWealthChange.textContent = fmtShortCur(wealthDiff) + ' less than current';
+                    explorerWealthChange.className = 'text-sm text-red-400';
+                }
+            }
+
+            if (explorerNewSalary) explorerNewSalary.textContent = fmtShortCur(newSalary) + '/yr';
+            if (explorerTotalCash) explorerTotalCash.textContent = fmtCur(totalCash) + ' over ' + yearsToExit + ' years';
+            
+            if (explorerNewEquity) explorerNewEquity.textContent = newEquityPct.toFixed(4) + '%';
+            if (explorerEquityValue) explorerEquityValue.textContent = fmtShortCur(newNetEquityAfterTax) + ' after dilution & tax';
+
+            const salDiff = newSalary - salary;
+            if (explorerSalaryChange) {
+                if (Math.abs(salDiff) < 1000) {
+                    explorerSalaryChange.textContent = 'Current';
+                    explorerSalaryChange.className = 'text-xs font-medium px-2 py-1 rounded bg-white/10 text-white/70 inline-block';
+                } else if (salDiff > 0) {
+                    explorerSalaryChange.textContent = '+' + fmtShortCur(salDiff) + '/yr';
+                    explorerSalaryChange.className = 'text-xs font-medium px-2 py-1 rounded bg-emerald-900/50 text-emerald-300 inline-block';
+                } else {
+                    explorerSalaryChange.textContent = fmtShortCur(salDiff) + '/yr';
+                    explorerSalaryChange.className = 'text-xs font-medium px-2 py-1 rounded bg-red-900/50 text-red-300 inline-block';
+                }
+            }
+
+            const eqDiff = newNetEquityAfterTax - baseNetEquityAfterTax;
+            if (explorerEquityChange) {
+                if (Math.abs(eqDiff) < 1000) {
+                    explorerEquityChange.textContent = 'Current';
+                    explorerEquityChange.className = 'text-xs font-medium px-2 py-1 rounded bg-white/10 text-white/70 inline-block';
+                } else if (eqDiff > 0) {
+                    explorerEquityChange.textContent = '+' + fmtShortCur(eqDiff);
+                    explorerEquityChange.className = 'text-xs font-medium px-2 py-1 rounded bg-emerald-900/50 text-emerald-300 inline-block';
+                } else {
+                    explorerEquityChange.textContent = fmtShortCur(eqDiff);
+                    explorerEquityChange.className = 'text-xs font-medium px-2 py-1 rounded bg-red-900/50 text-red-300 inline-block';
+                }
+            }
+
+            // Set slider to current position
+            const currentPct = (salary / budget) * 100;
+            if (mixSlider && !mixSlider.matches(':active')) {
+                mixSlider.value = currentPct;
+            }
         }
 
         // ============== Wiring ==============
@@ -629,7 +863,24 @@
             toggleIcon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
         });
 
-        // NEW: RSU toggle
+        // Explorer toggle
+        if (toggleExplorer) {
+            toggleExplorer.addEventListener('click', () => {
+                const isHidden = explorerContent.classList.contains('hidden');
+                explorerContent.classList.toggle('hidden');
+                if (explorerChevron) {
+                    explorerChevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+                if (isHidden) {
+                    updateExplorer();
+                }
+            });
+        }
+
+        if (mixSlider) {
+            mixSlider.addEventListener('input', updateExplorer);
+        }
+
         if(rsuEnableEl) {
             rsuEnableEl.addEventListener('change', ()=>{
                 if(rsuEnableEl.checked){
@@ -678,7 +929,6 @@
             calculate();
         });
 
-        // Initial formatting and calculation
         document.querySelectorAll('input.offer-input').forEach(input=>{
             if(numericFields.includes(input.id)) return;
             if(input.value) input.value = fmtInt(parseNumber(input.value));
