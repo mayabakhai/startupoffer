@@ -22,7 +22,7 @@
 </head>
 <body class="min-h-screen bg-[#0b0f14] text-white">
   <!-- Nav -->
-  <header class="fixed inset-x-0 top-0 z-50">
+  <header class="absolute inset-x-0 top-0 z-50">
     <div class="mx-auto max-w-6xl px-4">
       <div class="mt-4 flex items-center justify-between rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2">
         <div class="flex items-center gap-2">
@@ -275,8 +275,8 @@
         const toggleBtn = document.getElementById('toggleAdvanced');
         const toggleText = document.getElementById('toggleText');
         const toggleIcon = document.getElementById('toggleIcon');
-        const advancedSection = document.getElementById('advancedSection');
         const valMode = document.getElementById('valMode');
+        const advancedSection = document.getElementById('advancedSection');
 
         // ============== Helpers ==============
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
