@@ -256,7 +256,7 @@
 </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+(function() {
         // ============== Elements ==============
         const salaryEl = document.getElementById('salary');
         const ownEl = document.getElementById('yourOwnership');
@@ -359,7 +359,7 @@
             const taxPct = clampPercent(parseNumber(taxEl.value));
             const exitVal = parseNumber(exitEl.value);
             const prefStack = parseNumber(prefEl.value);
-            const stageKey = fundingStageEl.value;
+            const stageKey = document.getElementById('fundingStage').value; // Use the hidden input for pills
             const vestYears = parseNumber(vestYearsEl.value);
             const cliffMonths = parseNumber(cliffEl.value);
             const servedMonths = parseNumber(servedEl.value);
@@ -458,14 +458,20 @@
             });
         });
 
-        fundingStageEl.addEventListener('change', calculate);
+        const stagePills = document.getElementById('stagePills');
+        stagePills.addEventListener('click', e=>{
+            const btn=e.target.closest('button[data-value]'); if(!btn) return;
+            stagePills.querySelectorAll('.pill').forEach(b=>{ b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
+            btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
+            document.getElementById('fundingStage').value=btn.dataset.value; calculate();
+        });
 
         document.querySelectorAll('input.offer-input').forEach(input=>{
             if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(input.id)) return;
             if(input.value) input.value = fmtInt(parseNumber(input.value));
         });
         calculate();
-    });
+    })();
   </script>
 </body>
 </html>
