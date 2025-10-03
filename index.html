@@ -22,6 +22,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     html{scroll-behavior:smooth} body{font-family:'Inter',sans-serif}
+    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer}
+    .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
+    .pill.is-active{border-color:rgba(110,231,183,.5);color:#fff;background:rgba(255,255,255,.1)}
     .glass-card{-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
     .glass-card::before,
     .glass-card::after { pointer-events: none; }
@@ -30,12 +33,14 @@
   </style>
 </head>
 <body class="min-h-screen bg-[#0b0f14] text-white">
+  <!-- Background Image & Overlays -->
+  <img src="https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2400&auto=format&fit=crop" alt="" class="fixed inset-0 h-full w-full object-cover -z-10">
+  <div class="fixed inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgba(0,0,0,.65),rgba(11,15,20,.92))] pointer-events-none -z-10"></div>
+  <div class="fixed inset-0 [box-shadow:inset_0_-120px_160px_-80px_rgba(11,15,20,.9)] pointer-events-none -z-10"></div>
+  
   <!-- Hero -->
-  <section class="relative isolate h-[52vh] min-h-[520px] w-full overflow-hidden pt-16">
-    <img src="https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2400&auto=format&fit=crop" alt="Mountain landscape with a cloudy sky" class="absolute inset-0 h-full w-full object-cover">
-    <div class="absolute inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgba(0,0,0,.65),rgba(11,15,20,.92))] pointer-events-none"></div>
-    <div class="absolute inset-0 [box-shadow:inset_0_-120px_160px_-80px_rgba(11,15,20,.9)] pointer-events-none"></div>
-    <div class="relative mx-auto flex h-full max-w-6xl items-center px-4 sm:px-6">
+  <section class="relative h-[52vh] min-h-[520px] w-full flex items-center justify-center pt-16">
+    <div class="mx-auto max-w-6xl w-full px-4 sm:px-6">
       <div class="max-w-3xl">
         <h1 class="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">Analyze Your <span class="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">Startup Offer</span></h1>
         <p class="mt-4 text-lg md:text-xl text-white/80">See the real value of your salary and equity across future rounds and potential exits.</p>
@@ -85,20 +90,16 @@
               <input id="exitValuation" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="1,000,000,000">
             </div>
             <div>
-              <label for="fundingStage" class="block text-xs font-medium uppercase tracking-wider text-white/60">Last Financing Stage</label>
-               <div class="relative mt-2">
-                <select id="fundingStage" class="w-full appearance-none rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40">
-                  <option value="pre-seed">Pre-Seed</option>
-                  <option value="seed">Seed</option>
-                  <option value="series-a" selected>Series A</option>
-                  <option value="series-b">Series B</option>
-                  <option value="series-c">Series C</option>
-                  <option value="series-d">Series D+</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white/50">
-                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </div>
+              <span id="stage-label" class="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
+              <div id="stagePills" role="group" aria-labelledby="stage-label" class="flex flex-wrap gap-2">
+                <button type="button" data-value="pre-seed"  class="pill" aria-pressed="false">Pre-Seed</button>
+                <button type="button" data-value="seed"      class="pill" aria-pressed="false">Seed</button>
+                <button type="button" data-value="series-a"  class="pill is-active" aria-pressed="true">Series A</button>
+                <button type="button" data-value="series-b"  class="pill" aria-pressed="false">Series B</button>
+                <button type="button" data-value="series-c"  class="pill" aria-pressed="false">Series C</button>
+                <button type="button" data-value="series-d"  class="pill" aria-pressed="false">Series D+</button>
               </div>
+              <input type="hidden" id="fundingStage" value="series-a">
             </div>
           </div>
           
@@ -232,239 +233,239 @@
   </main>
 
   <footer class="mt-16 pb-10 text-center text-white/40 text-xs">
-    <div class="flex flex-col items-center gap-4">
-        <div class="flex items-center gap-x-4 text-sm text-white/70">
-             <a href="https://www.spicecapital.xyz/" target="_blank" rel="noopener" class="hover:text-white transition-colors">
-                Created by Spice Capital
-            </a>
-            <span class="text-white/30">|</span>
-            <a href="mailto:info@spicecap.xyz" class="hover:text-white transition-colors">Learn More</a>
-        </div>
-        <div class="flex items-center gap-4">
-            <a href="https://www.instagram.com/spice_cap/" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="Instagram">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7.027a5.307 5.307 0 110 10.614 5.307 5.307 0 010-10.614zM12 15.362a3.362 3.362 0 100-6.724 3.362 3.362 0 000 6.724zM16.812 6.162a1.15 1.15 0 100 2.3 1.15 1.15 0 000-2.3z" clip-rule="evenodd" /></svg>
-            </a>
-            <a href="https://www.tiktok.com/@spicecapital" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="TikTok">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.86-.95-6.43-2.8-1.58-1.85-2.2-4.45-1.7-7.17.45-2.45 1.97-4.59 4.12-5.74 1.5-.81 3.24-1.14 5.01-1.07.12 1.54-.31 3.08-1.42 4.15-1.13 1.09-2.71 1.57-4.24 1.63-.5.02-1-.01-1.49-.09-.34-.05-.68-.14-.99-.28-.31-.14-.59-.33-.81-.56-.6-.61-.9-1.43-.8-2.31.02-1.03.53-2.02 1.34-2.66.83-.65 1.9-.92 2.95-.81.65.06 1.3.16 1.93.3.14.03.27.07.41.1.02-1.55.02-3.1-.01-4.65z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/company/spicecapital/?viewAsMember=true" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="LinkedIn">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-        </div>
-    </div>
+    <div class="flex flex-col items-center gap-4">
+        <div class="flex items-center gap-x-4 text-sm text-white/70">
+             <a href="https://www.spicecapital.xyz/" target="_blank" rel="noopener" class="hover:text-white transition-colors">
+                Created by Spice Capital
+            </a>
+            <span class="text-white/30">|</span>
+            <a href="mailto:info@spicecap.xyz" class="hover:text-white transition-colors">Learn More</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="https://www.instagram.com/spice_cap/" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="Instagram">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7.027a5.307 5.307 0 110 10.614 5.307 5.307 0 010-10.614zM12 15.362a3.362 3.362 0 100-6.724 3.362 3.362 0 000 6.724zM16.812 6.162a1.15 1.15 0 100 2.3 1.15 1.15 0 000-2.3z" clip-rule="evenodd" /></svg>
+            </a>
+            <a href="https://www.tiktok.com/@spicecapital" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="TikTok">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.86-.95-6.43-2.8-1.58-1.85-2.2-4.45-1.7-7.17.45-2.45 1.97-4.59 4.12-5.74 1.5-.81 3.24-1.14 5.01-1.07.12 1.54-.31 3.08-1.42 4.15-1.13 1.09-2.71 1.57-4.24 1.63-.5.02-1-.01-1.49-.09-.34-.05-.68-.14-.99-.28-.31-.14-.59-.33-.81-.56-.6-.61-.9-1.43-.8-2.31.02-1.03.53-2.02 1.34-2.66.83-.65 1.9-.92 2.95-.81.65.06 1.3.16 1.93.3.14.03.27.07.41.1.02-1.55.02-3.1-.01-4.65z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/spicecapital/?viewAsMember=true" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors" aria-label="LinkedIn">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+        </div>
+    </div>
 </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // ============== Elements ==============
-        const salaryEl = document.getElementById('salary');
-        const ownEl = document.getElementById('yourOwnership');
-        const companyValEl = document.getElementById('companyValuation');
-        const fdSharesEl = document.getElementById('fdShares');
-        const fmvEl = document.getElementById('fmv');
-        const strikeEl = document.getElementById('strike');
-        const taxEl = document.getElementById('taxPct');
-        const exitEl = document.getElementById('exitValuation');
-        const prefEl = document.getElementById('prefStack');
-        const fundingStageEl = document.getElementById('fundingStage');
-        const vestYearsEl = document.getElementById('vestingYears');
-        const cliffEl = document.getElementById('cliffMonths');
-        const servedEl = document.getElementById('monthsServed');
-        const totalCompEl = document.getElementById('totalComp');
-        const dilutedEl = document.getElementById('dilutedOwnership');
-        const futureEl = document.getElementById('futureValue');
-        const afterTaxEl = document.getElementById('afterTax');
-        const presentValueEl = document.getElementById('presentValue');
-        const exerciseEl = document.getElementById('exerciseCost');
-        const vestedNoteEl = document.getElementById('vestedNote');
-        const scenarioBody = document.getElementById('scenarioBody');
-        const vestBody = document.getElementById('vestingRows');
-        const dilutionBandEl = document.getElementById('dilutionBand');
-        const dSeedEl = document.getElementById('dSeed');
-        const dAEl    = document.getElementById('dA');
-        const dBEl    = document.getElementById('dB');
-        const dCEl    = document.getElementById('dC');
-        const poolTopUpEl = document.getElementById('poolTopUp');
-        const yearsToExitEl = document.getElementById('yearsToExit');
-        const discRateEl    = document.getElementById('discRate');
-        const toggleBtn = document.getElementById('toggleAdvanced');
-        const toggleText = document.getElementById('toggleText');
-        const toggleIcon = document.getElementById('toggleIcon');
-        const valMode = document.getElementById('valMode');
-        const advancedSection = document.getElementById('advancedSection');
+    document.addEventListener('DOMContentLoaded', () => {
+        // ============== Elements ==============
+        const salaryEl = document.getElementById('salary');
+        const ownEl = document.getElementById('yourOwnership');
+        const companyValEl = document.getElementById('companyValuation');
+        const fdSharesEl = document.getElementById('fdShares');
+        const fmvEl = document.getElementById('fmv');
+        const strikeEl = document.getElementById('strike');
+        const taxEl = document.getElementById('taxPct');
+        const exitEl = document.getElementById('exitValuation');
+        const prefEl = document.getElementById('prefStack');
+        const fundingStageEl = document.getElementById('fundingStage');
+        const vestYearsEl = document.getElementById('vestingYears');
+        const cliffEl = document.getElementById('cliffMonths');
+        const servedEl = document.getElementById('monthsServed');
+        const totalCompEl = document.getElementById('totalComp');
+        const dilutedEl = document.getElementById('dilutedOwnership');
+        const futureEl = document.getElementById('futureValue');
+        const afterTaxEl = document.getElementById('afterTax');
+        const presentValueEl = document.getElementById('presentValue');
+        const exerciseEl = document.getElementById('exerciseCost');
+        const vestedNoteEl = document.getElementById('vestedNote');
+        const scenarioBody = document.getElementById('scenarioBody');
+        const vestBody = document.getElementById('vestingRows');
+        const dilutionBandEl = document.getElementById('dilutionBand');
+        const dSeedEl = document.getElementById('dSeed');
+        const dAEl    = document.getElementById('dA');
+        const dBEl    = document.getElementById('dB');
+        const dCEl    = document.getElementById('dC');
+        const poolTopUpEl = document.getElementById('poolTopUp');
+        const yearsToExitEl = document.getElementById('yearsToExit');
+        const discRateEl    = document.getElementById('discRate');
+        const toggleBtn = document.getElementById('toggleAdvanced');
+        const toggleText = document.getElementById('toggleText');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const valMode = document.getElementById('valMode');
+        const advancedSection = document.getElementById('advancedSection');
 
-        // ============== Helpers ==============
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // ============== Helpers ==============
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        function parseNumber(str){ if(typeof str!=='string') str=String(str); return parseFloat(str.replace(/,/g,''))||0; }
-        function fmtCur(n){ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(n); }
-        function fmtShortCur(n) {
-          if (n >= 1e9) return '$' + (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
-          if (n >= 1e6) return '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
-          if (n >= 1e3) return '$' + (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
-          return fmtCur(n);
-        }
-        function fmtPct(n){ return `${n.toFixed(2)}%`; }
-        function fmtInt(n){ return new Intl.NumberFormat('en-US').format(Math.round(n)); }
-        function clampPercent(p){ return Math.min(100, Math.max(0, p)); }
+        function parseNumber(str){ if(typeof str!=='string') str=String(str); return parseFloat(str.replace(/,/g,''))||0; }
+        function fmtCur(n){ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(n); }
+        function fmtShortCur(n) {
+          if (n >= 1e9) return '$' + (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+          if (n >= 1e6) return '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+          if (n >= 1e3) return '$' + (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+          return fmtCur(n);
+        }
+        function fmtPct(n){ return `${n.toFixed(2)}%`; }
+        function fmtInt(n){ return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+        function clampPercent(p){ return Math.min(100, Math.max(0, p)); }
 
-        function vestedFraction(years, cliffMonths, servedMonths){
-            const totalMonths = Math.max(1, Math.round(years*12));
-            if (servedMonths < cliffMonths) return 0;
-            return Math.min(1, servedMonths/totalMonths);
-        }
+        function vestedFraction(years, cliffMonths, servedMonths){
+            const totalMonths = Math.max(1, Math.round(years*12));
+            if (servedMonths < cliffMonths) return 0;
+            return Math.min(1, servedMonths/totalMonths);
+        }
 
-        function animate(el, to, fmt){ if(prefersReduced || !el){ if(el) el.textContent = fmt(to); if(el) el.dataset.raw=to; return; }
-            const dur=600, start=performance.now(); const from=parseFloat(el.dataset?.raw||'0')||0;
-            const ease=t=>1-Math.pow(1-t,3);
-            const step=now=>{ const p=Math.min(1,(now-start)/dur); const v=from+(to-from)*ease(p); el.textContent=fmt(v); if(p<1) requestAnimationFrame(step); else el.dataset.raw=to; };
-            requestAnimationFrame(step);
-        }
+        function animate(el, to, fmt){ if(prefersReduced || !el){ if(el) el.textContent = fmt(to); if(el) el.dataset.raw=to; return; }
+            const dur=600, start=performance.now(); const from=parseFloat(el.dataset?.raw||'0')||0;
+            const ease=t=>1-Math.pow(1-t,3);
+            const step=now=>{ const p=Math.min(1,(now-start)/dur); const v=from+(to-from)*ease(p); el.textContent=fmt(v); if(p<1) requestAnimationFrame(step); else el.dataset.raw=to; };
+            requestAnimationFrame(step);
+        }
 
-        function currencyInput(el){
-            if (el.setSelectionRange) {
-                let cursor=el.selectionStart, orig=el.value.length;
-                let v=el.value.replace(/,/g,''); if(/[^0-9.]/.test(v)) v=v.replace(/[^0-9.]/g,'');
-                const num=parseNumber(v); el.value = el.value!=='' ? fmtInt(num) : '';
-                const nlen=el.value.length; if(nlen>orig) cursor+= (nlen-orig); el.setSelectionRange(cursor,cursor);
-            }
-        }
+        function currencyInput(el){
+            if (el.setSelectionRange) {
+                let cursor=el.selectionStart, orig=el.value.length;
+                let v=el.value.replace(/,/g,''); if(/[^0-9.]/.test(v)) v=v.replace(/[^0-9.]/g,'');
+                const num=parseNumber(v); el.value = el.value!=='' ? fmtInt(num) : '';
+                const nlen=el.value.length; if(nlen>orig) cursor+= (nlen-orig); el.setSelectionRange(cursor,cursor);
+            }
+        }
 
-        function roundDilution(stageKey){
-            const order = {
-                'pre-seed': ['seed','a','b','c'], 'seed': ['a','b','c'], 'series-a': ['b','c'],
-                'series-b': ['c'], 'series-c': ['c'], 'series-d': []
-            }[stageKey] || [];
-            const pool = clampPercent(parseNumber(poolTopUpEl.value))/100;
-            const map = {
-                seed: clampPercent(parseNumber(dSeedEl.value))/100 + pool,
-                a:    clampPercent(parseNumber(dAEl.value))/100    + pool,
-                b:    clampPercent(parseNumber(dBEl.value))/100    + pool,
-                c:    clampPercent(parseNumber(dCEl.value))/100    + pool,
-            };
-            return order.map(k => Math.min(0.99, map[k] || 0));
-        }
+        function roundDilution(stageKey){
+            const order = {
+                'pre-seed': ['seed','a','b','c'], 'seed': ['a','b','c'], 'series-a': ['b','c'],
+                'series-b': ['c'], 'series-c': ['c'], 'series-d': []
+            }[stageKey] || [];
+            const pool = clampPercent(parseNumber(poolTopUpEl.value))/100;
+            const map = {
+                seed: clampPercent(parseNumber(dSeedEl.value))/100 + pool,
+                a:    clampPercent(parseNumber(dAEl.value))/100    + pool,
+                b:    clampPercent(parseNumber(dBEl.value))/100    + pool,
+                c:    clampPercent(parseNumber(dCEl.value))/100    + pool,
+            };
+            return order.map(k => Math.min(0.99, map[k] || 0));
+        }
 
-        // ============== Calculation ==============
-        let valuationBasis = '409a';
+        // ============== Calculation ==============
+        let valuationBasis = '409a';
 
-        function calculate(){
-            const salary = parseNumber(salaryEl.value);
-            const grantPct = clampPercent(parseNumber(ownEl.value));
-            const companyVal = parseNumber(companyValEl.value);
-            const fdShares = parseNumber(fdSharesEl.value);
-            const fmv = parseNumber(fmvEl.value);
-            const strike = parseNumber(strikeEl.value);
-            const taxPct = clampPercent(parseNumber(taxEl.value));
-            const exitVal = parseNumber(exitEl.value);
-            const prefStack = parseNumber(prefEl.value);
-            const stageKey = fundingStageEl.value;
-            const vestYears = parseNumber(vestYearsEl.value);
-            const cliffMonths = parseNumber(cliffEl.value);
-            const servedMonths = parseNumber(servedEl.value);
-            const grantFraction = grantPct/100;
-            const vestFrac = vestedFraction(vestYears, cliffMonths, servedMonths);
-            const grantedShares = fdShares ? grantFraction * fdShares : 0;
-            const vestedShares = grantedShares * vestFrac;
-            let currentEquityValue;
-            if (valuationBasis === '409a' && fmv > 0 && vestedShares > 0) { currentEquityValue = fmv * vestedShares; } 
-            else { currentEquityValue = companyVal * grantFraction * vestFrac; }
-            const totalComp = salary + currentEquityValue;
-            const dilutions = roundDilution(stageKey);
-            const dilutedOwnership = grantFraction * dilutions.reduce((acc, d) => acc*(1 - d), 1);
-            const commonPool = Math.max(0, exitVal - (prefStack || 0));
-            const yourGross = commonPool * dilutedOwnership;
-            const exerciseCost = (vestedShares && strike) ? (vestedShares * strike) : 0;
-            const netBeforeTax = Math.max(0, yourGross - exerciseCost);
-            const afterTax = netBeforeTax * (1 - taxPct/100);
-            const yearsToExit = Math.max(0, parseNumber(yearsToExitEl.value));
-            const discRate = clampPercent(parseNumber(discRateEl.value))/100;
-            const pv = (yearsToExit > 0 && discRate > 0) ? afterTax / Math.pow(1 + discRate, yearsToExit) : null;
-            animate(totalCompEl, totalComp, fmtCur);
-            dilutedEl.textContent = fmtPct(dilutedOwnership*100);
-            animate(futureEl, yourGross, fmtCur);
-            afterTaxEl.textContent = taxPct ? `After tax: ${fmtCur(afterTax)}` : '';
-            presentValueEl.textContent = (pv!=null) ? `Present value (~${yearsToExit} yrs @ ${(discRate*100).toFixed(0)}%): ${fmtCur(pv)}` : '';
-            exerciseEl.textContent = exerciseCost ? `Exercise cost (vested): ${fmtCur(exerciseCost)}` : '';
-            vestedNoteEl.textContent = (vestFrac<1) ? `Vested ${fmtPct(vestFrac*100)} of grant (${fdShares? fmtInt(vestedShares)+' sh' : fmtPct(grantPct*vestFrac)})` : 'Fully vested grant';
+        function calculate(){
+            const salary = parseNumber(salaryEl.value);
+            const grantPct = clampPercent(parseNumber(ownEl.value));
+            const companyVal = parseNumber(companyValEl.value);
+            const fdShares = parseNumber(fdSharesEl.value);
+            const fmv = parseNumber(fmvEl.value);
+            const strike = parseNumber(strikeEl.value);
+            const taxPct = clampPercent(parseNumber(taxEl.value));
+            const exitVal = parseNumber(exitEl.value);
+            const prefStack = parseNumber(prefEl.value);
+            const stageKey = fundingStageEl.value;
+            const vestYears = parseNumber(vestYearsEl.value);
+            const cliffMonths = parseNumber(cliffEl.value);
+            const servedMonths = parseNumber(servedEl.value);
+            const grantFraction = grantPct/100;
+            const vestFrac = vestedFraction(vestYears, cliffMonths, servedMonths);
+            const grantedShares = fdShares ? grantFraction * fdShares : 0;
+            const vestedShares = grantedShares * vestFrac;
+            let currentEquityValue;
+            if (valuationBasis === '409a' && fmv > 0 && vestedShares > 0) { currentEquityValue = fmv * vestedShares; } 
+            else { currentEquityValue = companyVal * grantFraction * vestFrac; }
+            const totalComp = salary + currentEquityValue;
+            const dilutions = roundDilution(stageKey);
+            const dilutedOwnership = grantFraction * dilutions.reduce((acc, d) => acc*(1 - d), 1);
+            const commonPool = Math.max(0, exitVal - (prefStack || 0));
+            const yourGross = commonPool * dilutedOwnership;
+            const exerciseCost = (vestedShares && strike) ? (vestedShares * strike) : 0;
+            const netBeforeTax = Math.max(0, yourGross - exerciseCost);
+            const afterTax = netBeforeTax * (1 - taxPct/100);
+            const yearsToExit = Math.max(0, parseNumber(yearsToExitEl.value));
+            const discRate = clampPercent(parseNumber(discRateEl.value))/100;
+            const pv = (yearsToExit > 0 && discRate > 0) ? afterTax / Math.pow(1 + discRate, yearsToExit) : null;
+            animate(totalCompEl, totalComp, fmtCur);
+            dilutedEl.textContent = fmtPct(dilutedOwnership*100);
+            animate(futureEl, yourGross, fmtCur);
+            afterTaxEl.textContent = taxPct ? `After tax: ${fmtCur(afterTax)}` : '';
+            presentValueEl.textContent = (pv!=null) ? `Present value (~${yearsToExit} yrs @ ${(discRate*100).toFixed(0)}%): ${fmtCur(pv)}` : '';
+            exerciseEl.textContent = exerciseCost ? `Exercise cost (vested): ${fmtCur(exerciseCost)}` : '';
+            vestedNoteEl.textContent = (vestFrac<1) ? `Vested ${fmtPct(vestFrac*100)} of grant (${fdShares? fmtInt(vestedShares)+' sh' : fmtPct(grantPct*vestFrac)})` : 'Fully vested grant';
 
-            const exits = [
-                {label:'Bear', val: Math.max(0, exitVal*0.5)}, {label:'Base',  val: exitVal}, {label:'Best',  val: exitVal*1.5}
-            ];
-            scenarioBody.innerHTML = exits.map(s=>{
-                const pool = Math.max(0, s.val - (prefStack||0));
-                const gross = pool * dilutedOwnership;
-                const net = Math.max(0, gross - exerciseCost);
-                const at = taxPct ? net*(1-taxPct/100) : net;
-                return `<tr class="border-b border-white/10 last:border-b-0">
-                    <td class="py-3 pr-2">${s.label}</td>
-                    <td class="py-3 text-right num-cell">${fmtShortCur(s.val)}</td>
-                    <td class="py-3 text-right num-cell text-base font-bold text-white">${fmtShortCur(at)}</td>
-                </tr>`;
-            }).join('');
+            const exits = [
+                {label:'Bear', val: Math.max(0, exitVal*0.5)}, {label:'Base',  val: exitVal}, {label:'Best',  val: exitVal*1.5}
+            ];
+            scenarioBody.innerHTML = exits.map(s=>{
+                const pool = Math.max(0, s.val - (prefStack||0));
+                const gross = pool * dilutedOwnership;
+                const net = Math.max(0, gross - exerciseCost);
+                const at = taxPct ? net*(1-taxPct/100) : net;
+                return `<tr class="border-b border-white/10 last:border-b-0">
+                    <td class="py-3 pr-2">${s.label}</td>
+                    <td class="py-3 text-right num-cell">${fmtShortCur(s.val)}</td>
+                    <td class="py-3 text-right num-cell text-base font-bold text-white">${fmtShortCur(at)}</td>
+                </tr>`;
+            }).join('');
 
-            if (dilutions.length){
-                const avg = dilutions.reduce((a,b)=>a+b,0)/dilutions.length;
-                const low = Math.max(0, avg - 0.05);
-                const hi  = Math.min(0.9, avg + 0.05);
-                const ownLow = grantFraction * Math.pow(1 - low, dilutions.length);
-                const ownHi  = grantFraction * Math.pow(1 - hi,  dilutions.length);
-                dilutionBandEl.textContent = `Sensitivity: if avg dilution were ${fmtPct((low)*100)}–${fmtPct((hi)*100)} per round, exit ownership ~ ${fmtPct(ownHi*100)}–${fmtPct(ownLow*100)}.`;
-            } else { dilutionBandEl.textContent = ''; }
+            if (dilutions.length){
+                const avg = dilutions.reduce((a,b)=>a+b,0)/dilutions.length;
+                const low = Math.max(0, avg - 0.05);
+                const hi  = Math.min(0.9, avg + 0.05);
+                const ownLow = grantFraction * Math.pow(1 - low, dilutions.length);
+                const ownHi  = grantFraction * Math.pow(1 - hi,  dilutions.length);
+                dilutionBandEl.textContent = `Sensitivity: if avg dilution were ${fmtPct((low)*100)}–${fmtPct((hi)*100)} per round, exit ownership ~ ${fmtPct(ownHi*100)}–${fmtPct(ownLow*100)}.`;
+            } else { dilutionBandEl.textContent = ''; }
 
-            const checkpoints=[12,24,36,48];
-            vestBody.innerHTML = checkpoints.map(m=>{
-                const vf = vestedFraction(vestYears, cliffMonths, m);
-                const vSh = grantedShares*vf;
-                const cur = (valuationBasis==='409a' && fmv>0 && vSh>0) ? (fmv*vSh) : (companyVal*grantFraction*vf);
-                return `<tr>
-                    <td class="py-1">${m} mo</td>
-                    <td class="py-1 text-right num-cell">${fmtPct(vf*100)}</td>
-                    <td class="py-1 text-right num-cell">${fmtCur(cur)}</td>
-                </tr>`;
-            }).join('');
-        }
+            const checkpoints=[12,24,36,48];
+            vestBody.innerHTML = checkpoints.map(m=>{
+                const vf = vestedFraction(vestYears, cliffMonths, m);
+                const vSh = grantedShares*vf;
+                const cur = (valuationBasis==='409a' && fmv>0 && vSh>0) ? (fmv*vSh) : (companyVal*grantFraction*vf);
+                return `<tr>
+                    <td class="py-1">${m} mo</td>
+                    <td class="py-1 text-right num-cell">${fmtPct(vf*100)}</td>
+                    <td class="py-1 text-right num-cell">${fmtCur(cur)}</td>
+                </tr>`;
+            }).join('');
+        }
 
-        // ============== Wiring ==============
-        valMode.addEventListener('change', (e)=>{
-            const r = e.target.closest('input[name="valBasis"]');
-            if (r) { valuationBasis = r.value; calculate(); }
-        });
+        // ============== Wiring ==============
+        valMode.addEventListener('change', (e)=>{
+            const r = e.target.closest('input[name="valBasis"]');
+            if (r) { valuationBasis = r.value; calculate(); }
+        });
 
-        toggleBtn.addEventListener('click', () => {
-            const isHidden = advancedSection.classList.toggle('hidden');
-            toggleText.textContent = isHidden ? 'Show Advanced Options' : 'Hide Advanced Options';
-            toggleIcon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = advancedSection.classList.toggle('hidden');
+            toggleText.textContent = isHidden ? 'Show Advanced Options' : 'Hide Advanced Options';
+            toggleIcon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
 
-        document.querySelectorAll('.offer-input').forEach(input=>{
-            input.addEventListener('input', (e)=>{
-                const el=e.target;
-                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)){
-                    calculate(); return;
-                }
-                currencyInput(el); calculate();
-            });
-            input.addEventListener('focus', (e)=>{
-                const el=e.target;
-                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
-                el.value=String(parseNumber(el.value));
-            });
-            input.addEventListener('blur', (e)=>{
-                const el=e.target;
-                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
-                if(el.value) el.value=fmtInt(parseNumber(el.value));
-            });
-        });
+        document.querySelectorAll('.offer-input').forEach(input=>{
+            input.addEventListener('input', (e)=>{
+                const el=e.target;
+                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)){
+                    calculate(); return;
+                }
+                currencyInput(el); calculate();
+            });
+            input.addEventListener('focus', (e)=>{
+                const el=e.target;
+                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
+                el.value=String(parseNumber(el.value));
+            });
+            input.addEventListener('blur', (e)=>{
+                const el=e.target;
+                if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
+                if(el.value) el.value=fmtInt(parseNumber(el.value));
+            });
+        });
 
-        fundingStageEl.addEventListener('change', calculate);
+        fundingStageEl.addEventListener('change', calculate);
 
-        document.querySelectorAll('input.offer-input').forEach(input=>{
-            if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(input.id)) return;
-            if(input.value) input.value = fmtInt(parseNumber(input.value));
-        });
-        calculate();
-    });
+        document.querySelectorAll('input.offer-input').forEach(input=>{
+            if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(input.id)) return;
+            if(input.value) input.value = fmtInt(parseNumber(input.value));
+        });
+        calculate();
+    });
   </script>
 </body>
 </html>
