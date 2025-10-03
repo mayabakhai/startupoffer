@@ -1,304 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Analyze your startup job offer to see the real value of your salary and equity across future rounds and potential exits.">
-  <meta name="theme-color" content="#0b0f14">
-  <title>Startup Offer Analyzer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; }
-
-    /* Pill styles (no Tailwind @apply needed) */
-    .pill{
-      border-radius:9999px; border:1px solid rgba(255,255,255,.15);
-      background:rgba(0,0,0,.30); padding:.5rem .9rem;
-      font-size:.875rem; color:rgba(255,255,255,.80);
-      transition:all .2s ease; cursor:pointer;
-    }
-    .pill:hover{ border-color:rgba(110,231,183,.60); color:#fff; }
-    .pill.is-active{ border-color:rgba(110,231,183,.50); color:#fff; background:rgba(255,255,255,.10); }
-
-    /* Glass card cross-browser */
-    .glass-card{ -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); }
-  </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Analyze your startup job offer to see the real value of your salary and equity across future rounds and potential exits."/>
+  <meta name="theme-color" content="#0b0f14"/>
+  <title>Startup Offer Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html{scroll-behavior:smooth} body{font-family:'Inter',sans-serif}
+    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer}
+    .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
+    .pill.is-active{border-color:rgba(110,231,183,.5);color:#fff;background:rgba(255,255,255,.1)}
+    .glass-card{-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+    .num-cell{white-space:nowrap}
+    #advancedSection { transition: all 0.3s ease-in-out; }
+  </style>
 </head>
 <body class="min-h-screen bg-[#0b0f14] text-white">
-  <!-- Nav -->
-  <header class="fixed inset-x-0 top-0 z-50">
-    <div class="mx-auto max-w-6xl px-4">
-      <div class="mt-4 flex items-center justify-between rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2">
-        <div class="flex items-center gap-2">
-          <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span class="text-sm font-semibold tracking-wide">Startup Offer Analyzer</span>
-        </div>
-        <nav class="hidden md:flex items-center gap-6 text-sm text-white/70">
-          <a href="#calculator" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-300 rounded-sm">Calculator</a>
-          <a href="https://www.holloway.com/g/equity-compensation" target="_blank" rel="noopener" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-300 rounded-sm">Learn Equity</a>
-        </nav>
-      </div>
-    </div>
-  </header>
+  <!-- Nav -->
+  <header class="fixed inset-x-0 top-0 z-50">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="mt-4 flex items-center justify-between rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2">
+        <div class="flex items-center gap-2">
+          <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+          <span class="text-sm font-semibold tracking-wide">Startup Offer Analyzer</span>
+        </div>
+        <nav class="hidden md:flex items-center gap-6 text-sm text-white/70">
+          <a href="#calculator" class="hover:text-white transition-colors">Calculator</a>
+          <a href="https://www.holloway.com/g/equity-compensation" target="_blank" rel="noopener" class="hover:text-white transition-colors">Learn Equity</a>
+        </nav>
+      </div>
+    </div>
+  </header>
 
-  <!-- Hero -->
-  <section class="relative isolate h-[52vh] min-h-[520px] w-full overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2400&auto=format&fit=crop"
-         alt="Mountain landscape with a cloudy sky" class="absolute inset-0 h-full w-full object-cover">
-    <!-- Stronger hero overlay and vignette -->
-    <div class="absolute inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgba(0,0,0,.65),rgba(11,15,20,.92))]"></div>
-    <div class="absolute inset-0 [box-shadow:inset_0_-120px_160px_-80px_rgba(11,15,20,.9)]"></div>
+  <!-- Hero -->
+  <section class="relative isolate h-[52vh] min-h-[520px] w-full overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2400&auto=format&fit=crop" alt="Mountain landscape with a cloudy sky" class="absolute inset-0 h-full w-full object-cover">
+    <div class="absolute inset-0 bg-[radial-gradient(70%_120%_at_50%_0%,rgba(0,0,0,.65),rgba(11,15,20,.92))]"></div>
+    <div class="absolute inset-0 [box-shadow:inset_0_-120px_160px_-80px_rgba(11,15,20,.9)]"></div>
+    <div class="relative mx-auto flex h-full max-w-6xl items-center px-4 sm:px-6 pt-24">
+      <div class="max-w-3xl">
+        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">Analyze Your <span class="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">Startup Offer</span></h1>
+        <p class="mt-4 text-lg md:text-xl text-white/80">See the real value of your salary and equity across future rounds and potential exits.</p>
+        <div class="mt-6 flex gap-3">
+          <a href="#calculator" class="rounded-full bg-white text-black px-5 py-2.5 text-sm font-semibold hover:bg-white/90 transition-colors">Start Calculating</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <div class="relative mx-auto flex h-full max-w-6xl items-center px-4 sm:px-6 pt-24">
-      <div class="max-w-3xl">
-        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-          Analyze Your <span class="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">Startup Offer</span>
-        </h1>
-        <p class="mt-4 text-lg md:text-xl text-white/80">
-          See the real value of your salary and equity across future rounds and potential exits.
-        </p>
-        <div class="mt-6 flex gap-3">
-          <a href="#calculator" class="rounded-full bg-white text-black px-5 py-2.5 text-sm font-semibold hover:bg-white/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">Start Calculating</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Calculator card -->
-  <main id="calculator" class="relative -mt-24 pb-20">
-    <div class="mx-auto max-w-4xl px-4">
-      <!-- Glass card with gradient border and inner hairline -->
-      <div class="glass-card rounded-3xl relative bg-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] shadow-[0_10px_40px_-10px_rgba(0,0,0,.6)]
-                  before:absolute before:inset-0 before:rounded-3xl before:p-[1px] before:[background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.06))]
-                  before:[-webkit-mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] before:[-webkit-mask-composite:xor] before:mask-composite:exclude
-                  after:absolute after:inset-0 after:rounded-[calc(1.5rem-1px)] after:ring-1 after:ring-white/10">
-        <div class="p-6 md:p-10">
-          <!-- Inputs -->
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label for="salary" class="block text-xs font-medium uppercase tracking-wider text-white/60">Salary ($)</label>
-              <div class="relative mt-2">
+  <!-- Calculator -->
+  <main id="calculator" class="relative -mt-24 pb-20">
+    <div class="mx-auto max-w-5xl px-4">
+      <div class="glass-card rounded-3xl relative bg-white/[0.06] bg-gradient-to-b from-white/[0.08] to-white/[0.02] shadow-[0_10px_40px_-10px_rgba(0,0,0,.6)]
+                  before:absolute before:inset-0 before:rounded-3xl before:p-[1px] before:[background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.06))]
+                  before:[-webkit-mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] before:[-webkit-mask-composite:xor] before:mask-composite:exclude
+                  after:absolute after:inset-0 after:rounded-[calc(1.5rem-1px)] after:ring-1 after:ring-white/10">
+        <div class="p-6 md:p-10">
+          <!-- Simple Inputs -->
+          <div class="space-y-6">
+            <div class="grid md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Salary ($)</label>
                 <input id="salary" type="text"
-                  class="w-full rounded-xl border border-white/15 bg-black/30 pl-11 pr-4 py-3
-                         bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a3a3a3%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6%22/></svg>')]
-                         bg-no-repeat bg-[left_0.9rem_center]
-                         text-base text-white placeholder:text-white/40
-                         focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
-                  placeholder="120,000" value="120,000">
+                  class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
+                  value="120,000" placeholder="120,000">
               </div>
-            </div>
-            <div>
-              <label for="yourOwnership" class="block text-xs font-medium uppercase tracking-wider text-white/60">Equity Grant (%)</label>
-              <div class="relative mt-2">
-                <input id="yourOwnership" type="text"
-                  class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 pr-10 text-base text-white placeholder:text-white/40
-                         focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
-                  value="0.10" inputmode="decimal" aria-describedby="equity-hint">
-                <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-white/50">%</span>
+              <div>
+                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Equity Grant (%)</label>
+                <div class="relative mt-2">
+                  <input id="yourOwnership" type="text"
+                    class="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 pr-10 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
+                    value="0.10" inputmode="decimal" aria-describedby="equity-hint">
+                  <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-white/50">%</span>
+                </div>
+                <p id="equity-hint" class="mt-1 text-[11px] text-white/50">Tip: 0.25 = 0.25%</p>
               </div>
-              <p id="equity-hint" class="mt-1 text-[11px] text-white/50">Tip: 0.25 = 0.25%</p>
-            </div>
-          </div>
-
-          <!-- Stage pills -->
-          <div class="mt-6">
-            <span id="stage-label" class="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
-            <div id="stagePills" role="group" aria-labelledby="stage-label" class="flex flex-wrap gap-2">
-              <button type="button" data-value="pre-seed"  class="pill">Pre-Seed</button>
-              <button type="button" data-value="seed"      class="pill">Seed</button>
-              <button type="button" data-value="series-a"  class="pill is-active">Series A</button>
-              <button type="button" data-value="series-b"  class="pill">Series B</button>
-              <button type="button" data-value="series-c"  class="pill">Series C</button>
-              <button type="button" data-value="series-d"  class="pill">Series D+</button>
-            </div>
-            <input type="hidden" id="fundingStage" value="series-a">
-          </div>
-
-          <div class="mt-6 grid md:grid-cols-2 gap-6">
-            <div>
-              <label for="companyValuation" class="block text-xs font-medium uppercase tracking-wider text-white/60">Last Company Valuation ($)</label>
-              <div class="relative mt-2">
+              <div>
+                <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Last Company Valuation ($)</label>
                 <input id="companyValuation" type="text"
-                  class="w-full rounded-xl border border-white/15 bg-black/30 pl-11 pr-4 py-3
-                         bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a3a3a3%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M3 3v18h18%22/><path d=%22m19 9-5 5-4-4-3 3%22/></svg>')]
-                         bg-no-repeat bg-[left_0.9rem_center]
-                         text-base text-white placeholder:text-white/40
-                         focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
+                  class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white placeholder:text-white/40 focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
                   value="25,000,000">
               </div>
             </div>
             <div>
-              <label for="exitValuation" class="block text-xs font-medium uppercase tracking-wider text-white/60">Potential Exit Valuation ($)</label>
-              <div class="relative mt-2">
-                <input id="exitValuation" type="text"
-                  class="w-full rounded-xl border border-white/15 bg-black/30 pl-11 pr-4 py-3
-                         bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a3a3a3%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M3 3v18h18%22/><path d=%22m19 9-5 5-4-4-3 3%22/></svg>')]
-                         bg-no-repeat bg-[left_0.9rem_center]
-                         text-base text-white placeholder:text-white/40
-                         focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40 offer-input"
-                  value="1,000,000,000">
+              <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Potential Exit Valuation ($)</label>
+              <input id="exitValuation" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="1,000,000,000">
+            </div>
+            <div>
+              <span id="stage-label" class="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
+              <div id="stagePills" role="group" aria-labelledby="stage-label" class="flex flex-wrap gap-2">
+                <button type="button" data-value="pre-seed"  class="pill" aria-pressed="false">Pre-Seed</button>
+                <button type="button" data-value="seed"      class="pill" aria-pressed="false">Seed</button>
+                <button type="button" data-value="series-a"  class="pill is-active" aria-pressed="true">Series A</button>
+                <button type="button" data-value="series-b"  class="pill" aria-pressed="false">Series B</button>
+                <button type="button" data-value="series-c"  class="pill" aria-pressed="false">Series C</button>
+                <button type="button" data-value="series-d"  class="pill" aria-pressed="false">Series D+</button>
               </div>
+              <input type="hidden" id="fundingStage" value="series-a">
             </div>
           </div>
-
-          <!-- Divider -->
+          
+          <!-- Primary Results (always visible) -->
           <div class="my-8 h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-
-          <!-- Results -->
-          <div class="grid md:grid-cols-2 gap-y-8 gap-x-6 items-end">
-            <div class="space-y-3 order-2 md:order-1">
-              <div class="text-3xl font-bold" id="totalComp" data-raw="0" aria-live="polite">$145,000</div>
-              <div class="text-sm text-white/70">Total 1st Year Comp (Salary + Current Equity)</div>
-              <div class="text-sm text-white/50">Based on the company's last valuation.</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+              <div class="text-sm uppercase tracking-wider text-white/60">Total 1st Year Comp</div>
+              <div id="totalComp" class="text-3xl font-bold" aria-live="polite">$145,000</div>
+              <div class="text-xs text-white/50">Salary + value of <strong>vested</strong> equity today</div>
+              <div class="text-xs text-white/50" id="vestedNote"></div>
             </div>
-            <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5 order-1 md:order-2">
+            <div class="space-y-2 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
               <div class="flex items-baseline justify-between">
                 <span class="text-sm uppercase tracking-wider text-white/60">Est. Ownership at Exit</span>
                 <span id="dilutedOwnership" class="text-xl font-semibold">0.06%</span>
               </div>
-              <div class="mt-3 text-sm uppercase tracking-wider text-white/60">Potential Equity Value</div>
-              <div id="futureValue" class="mt-1 bg-gradient-to-r from-emerald-300 to-lime-300 bg-clip-text text-transparent text-5xl md:text-6xl font-extrabold tracking-tight" data-raw="0" aria-live="polite">
-                $640,000
-              </div>
+              <div class="text-sm uppercase tracking-wider text-white/60 mt-3">Potential Equity Value</div>
+              <div id="futureValue" class="bg-gradient-to-r from-emerald-300 to-lime-300 bg-clip-text text-transparent text-4xl font-extrabold tracking-tight" aria-live="polite">$640,000</div>
+              <div id="afterTax" class="text-sm text-white/70" aria-live="polite"></div>
+              <div id="presentValue" class="text-sm text-white/70" aria-live="polite"></div>
+            </div>
+             <div class="md:col-span-2 space-y-3 rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+              <div class="text-sm uppercase tracking-wider text-white/60">Exit Scenarios</div>
+              <table class="w-full text-sm">
+                <thead class="text-white/60 border-b border-white/20">
+                  <tr><th class="text-left font-medium py-2 pr-2">Case</th><th class="text-right font-medium py-2 px-2">Exit</th><th class="text-right font-medium py-2 pl-2">Your Take-Home</th></tr>
+                </thead>
+                <tbody id="scenarioBody"></tbody>
+              </table>
             </div>
           </div>
 
-          <p class="mt-8 text-[12px] leading-relaxed text-white/60">
-            <strong>Note:</strong> Estimates assume stage-typical dilution and are not financial advice. Your actual outcomes will vary.
-          </p>
-        </div>
-      </div>
-    </div>
-  </main>
+          <!-- Advanced Toggle -->
+          <div class="text-center pt-8">
+            <button id="toggleAdvanced" type="button" class="group text-emerald-300 hover:text-emerald-200 text-sm font-semibold flex items-center gap-2 mx-auto">
+              <span id="toggleText">Show Advanced Options</span>
+              <svg id="toggleIcon" class="w-4 h-4 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+          </div>
 
-  <!-- Footer -->
-  <footer class="mt-16 pb-10 text-center text-white/40 text-xs">
-    Built for founders • Estimates only • <a href="https://www.holloway.com/g/equity-compensation" class="underline hover:text-white/70">Learn equity basics</a>
-  </footer>
+          <!-- Advanced Section (hidden by default) -->
+          <div id="advancedSection" class="hidden space-y-8 border-t border-white/10 pt-8 mt-8">
+              <!-- Valuation basis toggle -->
+              <div class="text-sm text-white/80" id="valMode">
+                  <label class="inline-flex items-center gap-2 mr-6">
+                      <input type="radio" name="valBasis" value="409a" checked class="accent-emerald-400"> Use 409A (recommended)
+                  </label>
+                  <label class="inline-flex items-center gap-2">
+                      <input type="radio" name="valBasis" value="post" class="accent-emerald-400"> Use last round post-money
+                  </label>
+              </div>
+              <div class="grid md:grid-cols-4 gap-6">
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Vesting (years)</label>
+                  <input id="vestingYears" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="4">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Cliff (months)</label>
+                  <input id="cliffMonths" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="12">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Months Served</label>
+                  <input id="monthsServed" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="0">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Fully Diluted Shares (optional)</label>
+                  <input id="fdShares" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 50,000,000">
+                </div>
+              </div>
+              <div class="grid md:grid-cols-4 gap-6">
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">409A FMV ($/share)</label>
+                  <input id="fmv" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 1.25">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Strike Price ($/share)</label>
+                  <input id="strike" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 0.20">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Tax Estimate (%)</label>
+                  <input id="taxPct" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="0">
+                </div>
+                 <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-white/60">Pref Stack ($, 1× non-participating)</label>
+                    <input id="prefStack" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" placeholder="e.g. 50,000,000">
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-6">
+                  <label class="flex flex-col">
+                    <span class="text-xs uppercase tracking-wider text-white/60">Years to Exit</span>
+                    <input id="yearsToExit" class="offer-input mt-2 rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-white" value="5">
+                  </label>
+                  <label class="flex flex-col">
+                    <span class="text-xs uppercase tracking-wider text-white/60">Discount Rate %</span>
+                    <input id="discRate" class="offer-input mt-2 rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-white" value="12">
+                  </label>
+              </div>
+              <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+                <div class="text-sm uppercase tracking-wider text-white/60 mb-2">Editable Dilution Assumptions</div>
+                <div class="grid sm:grid-cols-5 gap-3 text-sm">
+                  <label class="flex flex-col">Seed % <input id="dSeed" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="22"></label>
+                  <label class="flex flex-col">A % <input id="dA" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="20"></label>
+                  <label class="flex flex-col">B % <input id="dB" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="18"></label>
+                  <label class="flex flex-col">C % <input id="dC" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="15"></label>
+                  <label class="flex flex-col">Pool top-up % <input id="poolTopUp" class="offer-input rounded-md bg-black/30 border border-white/15 px-3 py-2" value="0"></label>
+                </div>
+                <p class="mt-2 text-xs text-white/60">Top-up is added to each applicable round as extra dilution.</p>
+              </div>
+              <div class="space-y-4">
+                 <div id="exerciseCost" class="text-sm text-white/70" aria-live="polite"></div>
+                 <div id="dilutionBand" class="text-sm text-white/70 mt-1"></div>
+              </div>
+              <div class="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+                <div class="text-sm uppercase tracking-wider text-white/60 mb-2">Vesting Timeline (current value basis)</div>
+                <table class="w-full text-sm">
+                  <thead class="text-white/60">
+                    <tr><th class="text-left font-medium py-1">Month</th><th class="text-right font-medium py-1">Vested %</th><th class="text-right font-medium py-1">Current $</th></tr>
+                  </thead>
+                  <tbody id="vestingRows"></tbody>
+                </table>
+              </div>
+          </div>
 
-  <script>
-    const DILUTION_PER_ROUND = 0.20; // Simple v1 assumption
+          <p class="mt-8 text-[12px] leading-relaxed text-white/60">
+            <strong>Notes:</strong> Dilution is an estimate; option pool refreshes/terms vary. Calculator assumes 1× non-participating prefs; ignores participating prefs and multiples &gt;1×. Tax treatment differs by ISO/NSO, holding periods, AMT, QSBS, and jurisdiction.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    // Reduced motion preference
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  <footer class="mt-16 pb-10 text-center text-white/40 text-xs">
+    Built for founders • Estimates only • <a class="underline hover:text-white/70" href="https://www.holloway.com/g/equity-compensation" target="_blank">Learn equity basics</a>
+  </footer>
 
-    // Number parsing / formatting helpers
-    function parseNumber(str){ if(typeof str !== 'string') str = String(str); return parseFloat(str.replace(/,/g,'')) || 0; }
-    function formatCurrency(num){ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(num); }
-    function formatNumberWithCommas(num){ if(num===0) return '0'; return new Intl.NumberFormat('en-US').format(num) || ''; }
-    function clampPercent(p){ return Math.min(100, Math.max(0, p)); }
+  <script>
+    // ============== Helpers ==============
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Count-up animation for numbers
-    function animateNumber(el, to, fmt = v => v){
-      const dur = 700;
-      const start = performance.now();
-      const from = el.dataset.raw ? parseFloat(el.dataset.raw) : 0;
-      const ease = t => 1 - Math.pow(1 - t, 4); // easeOutQuart
-      const step = now => {
-        const p = Math.min(1, (now - start) / dur);
-        const v = from + (to - from) * ease(p);
-        el.textContent = fmt(v);
-        if (p < 1) requestAnimationFrame(step);
-        else { el.textContent = fmt(to); el.dataset.raw = to; }
-      };
-      requestAnimationFrame(step);
+    function parseNumber(str){ if(typeof str!=='string') str=String(str); return parseFloat(str.replace(/,/g,''))||0; }
+    function fmtCur(n){ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(n); }
+    function fmtShortCur(n) {
+      if (n >= 1e9) return '$' + (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1e3) return '$' + (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+      return fmtCur(n);
     }
-    function maybeAnimate(el, to, fmt){ if(prefersReduced){ el.textContent = fmt(to); el.dataset.raw = to; } else { animateNumber(el, to, fmt); } }
+    function fmtPct(n){ return `${n.toFixed(2)}%`; }
+    function fmtInt(n){ return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function clampPercent(p){ return Math.min(100, Math.max(0, p)); }
 
-    // Main calculation
-    function calculateOffer(){
-      const salary = parseNumber(document.getElementById('salary').value);
-      const initialOwnership = parseNumber(document.getElementById('yourOwnership').value);
-      const companyValuation = parseNumber(document.getElementById('companyValuation').value);
-      const exitValuation = parseNumber(document.getElementById('exitValuation').value);
-      const fundingStage = document.getElementById('fundingStage').value;
+    function vestedFraction(years, cliffMonths, servedMonths){
+      const totalMonths = Math.max(1, Math.round(years*12));
+      if (servedMonths < cliffMonths) return 0;
+      return Math.min(1, servedMonths/totalMonths);
+    }
 
-      // Clamp equity 0–100
-      const initialOwnershipPercent = clampPercent(initialOwnership) / 100;
+    function animate(el, to, fmt){ if(prefersReduced){ el.textContent = fmt(to); el.dataset.raw=to; return; }
+      const dur=600, start=performance.now(); const from=parseFloat(el.dataset?.raw||'0')||0;
+      const ease=t=>1-Math.pow(1-t,3);
+      const step=now=>{ const p=Math.min(1,(now-start)/dur); const v=from+(to-from)*ease(p); el.textContent=fmt(v); if(p<1) requestAnimationFrame(step); else el.dataset.raw=to; };
+      requestAnimationFrame(step);
+    }
 
-      // Current equity value & total comp
-      const currentEquityValue = initialOwnershipPercent * companyValuation;
-      const totalComp = salary + currentEquityValue;
-      const tcEl = document.getElementById('totalComp');
-      maybeAnimate(tcEl, totalComp, formatCurrency);
+    function currencyInput(el){
+      let cursor=el.selectionStart, orig=el.value.length;
+      let v=el.value.replace(/,/g,''); if(/[^0-9.]/.test(v)) v=v.replace(/[^0-9.]/g,'');
+      const num=parseNumber(v); el.value = el.value!=='' ? fmtInt(num) : '';
+      const nlen=el.value.length; if(nlen>orig) cursor+= (nlen-orig); el.setSelectionRange(cursor,cursor);
+    }
 
-      // Future rounds by stage
-      let estimatedFutureRounds = 0;
-      switch(fundingStage){
-        case 'pre-seed': estimatedFutureRounds = 4; break; // Seed, A, B, C
-        case 'seed':     estimatedFutureRounds = 3; break; // A, B, C
-        case 'series-a': estimatedFutureRounds = 2; break; // B, C
-        case 'series-b': estimatedFutureRounds = 1; break; // C
-        case 'series-c': estimatedFutureRounds = 1; break; // D
-        case 'series-d': estimatedFutureRounds = 0; break;
-      }
+    // Build round schedule from editable inputs + stage
+    function roundDilution(stageKey){
+      const order = {
+        'pre-seed': ['seed','a','b','c'],
+        'seed':     ['a','b','c'],
+        'series-a': ['b','c'],
+        'series-b': ['c'],
+        'series-c': ['c'],
+        'series-d': []
+      }[stageKey] || [];
+      const pool = clampPercent(parseNumber(poolTopUpEl.value))/100;
+      const map = {
+        seed: clampPercent(parseNumber(dSeedEl.value))/100 + pool,
+        a:    clampPercent(parseNumber(dAEl.value))/100   + pool,
+        b:    clampPercent(parseNumber(dBEl.value))/100   + pool,
+        c:    clampPercent(parseNumber(dCEl.value))/100   + pool,
+      };
+      return order.map(k => Math.min(0.99, map[k] || 0));
+    }
 
-      // Dilution & future value
-      const dilutedOwnershipPercent = initialOwnershipPercent * Math.pow(1 - DILUTION_PER_ROUND, estimatedFutureRounds);
-      document.getElementById('dilutedOwnership').textContent = (dilutedOwnershipPercent * 100).toFixed(2) + '%';
+    // ============== Calculation ==============
+    let valuationBasis = '409a';
 
-      const futureValue = dilutedOwnershipPercent * exitValuation;
-      const fvEl = document.getElementById('futureValue');
-      maybeAnimate(fvEl, futureValue, formatCurrency);
-    }
+    function calculate(){
+      // Inputs
+      const salary = parseNumber(salaryEl.value);
+      const grantPct = clampPercent(parseNumber(ownEl.value));
+      const companyVal = parseNumber(companyValEl.value);
+      const fdShares = parseNumber(fdSharesEl.value);
+      const fmv = parseNumber(fmvEl.value);
+      const strike = parseNumber(strikeEl.value);
+      const taxPct = clampPercent(parseNumber(taxEl.value));
+      const exitVal = parseNumber(exitEl.value);
+      const prefStack = parseNumber(prefEl.value);
+      const stageKey = stageHidden.value;
 
-    // Input handling
-    function handleInput(e){
-      const el = e.target;
-      // Format currency fields (not the percent field)
-      if(el.tagName === 'INPUT' && !el.id.includes('yourOwnership')){
-        let cursor = el.selectionStart;
-        const originalLen = el.value.length;
+      const vestYears = parseNumber(vestYearsEl.value);
+      const cliffMonths = parseNumber(cliffEl.value);
+      const servedMonths = parseNumber(servedEl.value);
 
-        let value = el.value.replace(/,/g,'');
-        if(/[^0-9.]/.test(value)) value = value.replace(/[^0-9.]/g,'');
-        const numValue = parseNumber(value);
+      const grantFraction = grantPct/100;
+      const vestFrac = vestedFraction(vestYears, cliffMonths, servedMonths);
 
-        el.value = el.value !== '' ? formatNumberWithCommas(numValue) : '';
+      // Shares
+      const grantedShares = fdShares ? grantFraction * fdShares : 0;
+      const vestedShares = grantedShares * vestFrac;
 
-        const newLen = el.value.length;
-        if(newLen > originalLen) cursor += (newLen - originalLen);
-        el.setSelectionRange(cursor, cursor);
-      }
-      calculateOffer();
-    }
+      // Current equity value:
+      // If basis=409a and we have FMV+shares, use FMV*vestedShares (conservative).
+      // Else fallback to post-money heuristic: companyVal * grant% * vested%.
+      let currentEquityValue;
+      if (valuationBasis === '409a' && fmv > 0 && vestedShares > 0) {
+        currentEquityValue = fmv * vestedShares;
+      } else {
+        currentEquityValue = companyVal * grantFraction * vestFrac;
+      }
 
-    // Stage pills behavior
-    const stageWrap = document.getElementById('stagePills');
-    stageWrap.addEventListener('click', e => {
-      const btn = e.target.closest('button[data-value]');
-      if(!btn) return;
-      stageWrap.querySelectorAll('.pill').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      document.getElementById('fundingStage').value = btn.dataset.value;
-      calculateOffer();
-    });
+      // Total comp today
+      const totalComp = salary + currentEquityValue;
 
-    // Wire inputs
-    document.querySelectorAll('.offer-input').forEach(input => {
-      input.addEventListener('input', handleInput);
-      input.addEventListener('focus', (e) => {
-        const el = e.target;
-        if(!el.id.includes('yourOwnership')) el.value = String(parseNumber(el.value));
-      });
-      input.addEventListener('blur', (e) => {
-        const el = e.target;
-        if(!el.id.includes('yourOwnership') && el.value) el.value = formatNumberWithCommas(parseNumber(el.value));
-      });
-    });
+      // Dilution to exit
+      const dilutions = roundDilution(stageKey);
+      const dilutedOwnership = grantFraction * dilutions.reduce((acc, d) => acc*(1 - d), 1);
 
-    // Initial format + calc
-    window.addEventListener('load', () => {
-      document.querySelectorAll('input.offer-input').forEach(input => {
-        if(!input.id.includes('yourOwnership') && input.value){
-          input.value = formatNumberWithCommas(parseNumber(input.value));
+      // Preference stack (1× non-participating)
+      const commonPool = Math.max(0, exitVal - (prefStack || 0));
+      const yourGross = commonPool * dilutedOwnership;
+
+      // Exercise cost (vested)
+      const exerciseCost = (vestedShares && strike) ? (vestedShares * strike) : 0;
+
+      // After-tax
+      const netBeforeTax = Math.max(0, yourGross - exerciseCost);
+      const afterTax = netBeforeTax * (1 - taxPct/100);
+
+      // Discounting / PV
+      const yearsToExit = Math.max(0, parseNumber(yearsToExitEl.value));
+      const discRate = clampPercent(parseNumber(discRateEl.value))/100;
+      const pv = (yearsToExit && discRate) ? afterTax / Math.pow(1 + discRate, yearsToExit) : null;
+
+      // Render core
+      animate(totalCompEl, totalComp, fmtCur);
+      dilutedEl.textContent = fmtPct(dilutedOwnership*100);
+      animate(futureEl, yourGross, fmtCur);
+      afterTaxEl.textContent = taxPct ? `After tax: ${fmtCur(afterTax)}` : '';
+      presentValueEl.textContent = (pv!=null) ? `Present value (~${yearsToExit} yrs @ ${(discRate*100).toFixed(0)}%): ${fmtCur(pv)}` : '';
+      exerciseEl.textContent = exerciseCost ? `Exercise cost (vested): ${fmtCur(exerciseCost)}` : '';
+
+      vestedNoteEl.textContent = (vestFrac<1)
+        ? `Vested ${fmtPct(vestFrac*100)} of grant (${fdShares? fmtInt(vestedShares)+' sh' : fmtPct(grantPct*vestFrac)})`
+        : 'Fully vested grant';
+
+      // Scenarios (±50% exits), applying pref + tax + exercise
+      const exits = [
+        {label:'Bear', val: Math.max(0, exitVal*0.5)},
+        {label:'Base',  val: exitVal},
+        {label:'Best',  val: exitVal*1.5}
+      ];
+      scenarioBody.innerHTML = exits.map(s=>{
+        const pool = Math.max(0, s.val - (prefStack||0));
+        const gross = pool * dilutedOwnership;
+        const net = Math.max(0, gross - exerciseCost);
+        const at = taxPct ? net*(1-taxPct/100) : net;
+        return `<tr class="border-b border-white/10 last:border-b-0">
+          <td class="py-3 pr-2">${s.label}</td>
+          <td class="py-3 text-right num-cell">${fmtShortCur(s.val)}</td>
+          <td class="py-3 text-right num-cell text-base font-bold text-white">${fmtShortCur(at)}</td>
+        </tr>`;
+      }).join('');
+
+      // Dilution sensitivity band (±5pp around average)
+      if (dilutions.length){
+        const avg = dilutions.reduce((a,b)=>a+b,0)/dilutions.length;
+        const low = Math.max(0, avg - 0.05);
+        const hi  = Math.min(0.9, avg + 0.05);
+        const ownLow = grantFraction * Math.pow(1 - low, dilutions.length);
+        const ownHi  = grantFraction * Math.pow(1 - hi,  dilutions.length);
+        dilutionBandEl.textContent = `Sensitivity: if avg dilution were ${fmtPct((low)*100)}–${fmtPct((hi)*100)} per round, exit ownership ~ ${fmtPct(ownHi*100)}–${fmtPct(ownLow*100)}.`;
+      } else {
+        dilutionBandEl.textContent = '';
+      }
+
+      // Vesting timeline (12/24/36/48 months) at "current value basis"
+      const checkpoints=[12,24,36,48];
+      vestBody.innerHTML = checkpoints.map(m=>{
+        const vf = vestedFraction(vestYears, cliffMonths, m);
+        const vSh = grantedShares*vf;
+        const cur = (valuationBasis==='409a' && fmv>0 && vSh>0) ? (fmv*vSh) : (companyVal*grantFraction*vf);
+        return `<tr>
+          <td class="py-1">${m} mo</td>
+          <td class="py-1 text-right num-cell">${fmtPct(vf*100)}</td>
+          <td class="py-1 text-right num-cell">${fmtCur(cur)}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ============== Wiring ==============
+    // Elements
+    const salaryEl = document.getElementById('salary');
+    const ownEl = document.getElementById('yourOwnership');
+    const companyValEl = document.getElementById('companyValuation');
+    const fdSharesEl = document.getElementById('fdShares');
+    const fmvEl = document.getElementById('fmv');
+    const strikeEl = document.getElementById('strike');
+    const taxEl = document.getElementById('taxPct');
+    const exitEl = document.getElementById('exitValuation');
+    const prefEl = document.getElementById('prefStack');
+    const stageWrap = document.getElementById('stagePills');
+    const stageHidden = document.getElementById('fundingStage');
+
+    const vestYearsEl = document.getElementById('vestingYears');
+    const cliffEl = document.getElementById('cliffMonths');
+    const servedEl = document.getElementById('monthsServed');
+
+    const totalCompEl = document.getElementById('totalComp');
+    const dilutedEl = document.getElementById('dilutedOwnership');
+    const futureEl = document.getElementById('futureValue');
+    const afterTaxEl = document.getElementById('afterTax');
+    const presentValueEl = document.getElementById('presentValue');
+    const exerciseEl = document.getElementById('exerciseCost');
+    const vestedNoteEl = document.getElementById('vestedNote');
+    const scenarioBody = document.getElementById('scenarioBody');
+    const vestBody = document.getElementById('vestingRows');
+    const dilutionBandEl = document.getElementById('dilutionBand');
+
+    const dSeedEl = document.getElementById('dSeed');
+    const dAEl    = document.getElementById('dA');
+    const dBEl    = document.getElementById('dB');
+    const dCEl    = document.getElementById('dC');
+    const poolTopUpEl = document.getElementById('poolTopUp');
+
+    const yearsToExitEl = document.getElementById('yearsToExit');
+    const discRateEl    = document.getElementById('discRate');
+
+    const toggleBtn = document.getElementById('toggleAdvanced');
+    const toggleText = document.getElementById('toggleText');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const advancedSection = document.getElementById('advancedSection');
+
+    // Valuation basis toggle
+    const valMode = document.getElementById('valMode');
+    valMode.addEventListener('change', (e)=>{
+      const r = e.target.closest('input[name="valBasis"]');
+      if (r) { valuationBasis = r.value; calculate(); }
+    });
+
+    // Advanced toggle
+    toggleBtn.addEventListener('click', () => {
+        const isHidden = advancedSection.classList.toggle('hidden');
+        if (isHidden) {
+            toggleText.textContent = 'Show Advanced Options';
+            toggleIcon.style.transform = 'rotate(0deg)';
+        } else {
+            toggleText.textContent = 'Hide Advanced Options';
+            toggleIcon.style.transform = 'rotate(180deg)';
         }
-      });
-      calculateOffer();
     });
-  </script>
+
+    // Format currency-like inputs (keep %/counts raw)
+    document.querySelectorAll('.offer-input').forEach(input=>{
+      input.addEventListener('input', (e)=>{
+        const el=e.target;
+        if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)){
+          calculate(); return;
+        }
+        currencyInput(el); calculate();
+      });
+      input.addEventListener('focus', (e)=>{
+        const el=e.target;
+        if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
+        el.value=String(parseNumber(el.value));
+      });
+      input.addEventListener('blur', (e)=>{
+        const el=e.target;
+        if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(el.id)) return;
+        if(el.value) el.value=fmtInt(parseNumber(el.value));
+      });
+    });
+
+    // Stage pills
+    stageWrap.addEventListener('click', e=>{
+      const btn=e.target.closest('button[data-value]'); if(!btn) return;
+      stageWrap.querySelectorAll('.pill').forEach(b=>{ b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
+      btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
+      stageHidden.value=btn.dataset.value; calculate();
+    });
+
+    // Initial format + calc
+    window.addEventListener('load', ()=>{
+      document.querySelectorAll('input.offer-input').forEach(input=>{
+        if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(input.id)) return;
+        if(input.value) input.value = fmtInt(parseNumber(input.value));
+      });
+      calculate();
+    });
+  </script>
 </body>
 </html>
+
 
