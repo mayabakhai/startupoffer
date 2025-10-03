@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     html{scroll-behavior:smooth} body{font-family:'Inter',sans-serif}
-    .pill{border-radius:9999px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.3);padding:.5rem .9rem;font-size:.875rem;color:rgba(255,255,255,.8);transition:all .2s;cursor:pointer}
-    .pill:hover{border-color:rgba(110,231,183,.6);color:#fff}
-    .pill.is-active{border-color:rgba(110,231,183,.5);color:#fff;background:rgba(255,255,255,.1)}
     .glass-card{-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
     .glass-card::before,
     .glass-card::after { pointer-events: none; }
@@ -92,16 +89,20 @@
               <input id="exitValuation" type="text" class="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white offer-input" value="1,000,000,000">
             </div>
             <div>
-              <span id="stage-label" class="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">Last Financing Stage</span>
-              <div id="stagePills" role="group" aria-labelledby="stage-label" class="flex flex-wrap gap-2">
-                <button type="button" data-value="pre-seed"  class="pill" aria-pressed="false">Pre-Seed</button>
-                <button type="button" data-value="seed"      class="pill" aria-pressed="false">Seed</button>
-                <button type="button" data-value="series-a"  class="pill is-active" aria-pressed="true">Series A</button>
-                <button type="button" data-value="series-b"  class="pill" aria-pressed="false">Series B</button>
-                <button type="button" data-value="series-c"  class="pill" aria-pressed="false">Series C</button>
-                <button type="button" data-value="series-d"  class="pill" aria-pressed="false">Series D+</button>
+              <label for="fundingStage" class="block text-xs font-medium uppercase tracking-wider text-white/60">Last Financing Stage</label>
+               <div class="relative mt-2">
+                <select id="fundingStage" class="w-full appearance-none rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-base text-white focus:border-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40">
+                  <option value="pre-seed">Pre-Seed</option>
+                  <option value="seed">Seed</option>
+                  <option value="series-a" selected>Series A</option>
+                  <option value="series-b">Series B</option>
+                  <option value="series-c">Series C</option>
+                  <option value="series-d">Series D+</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white/50">
+                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
               </div>
-              <input type="hidden" id="fundingStage" value="series-a">
             </div>
           </div>
           
@@ -250,8 +251,7 @@
         const taxEl = document.getElementById('taxPct');
         const exitEl = document.getElementById('exitValuation');
         const prefEl = document.getElementById('prefStack');
-        const stageWrap = document.getElementById('stagePills');
-        const stageHidden = document.getElementById('fundingStage');
+        const fundingStageEl = document.getElementById('fundingStage');
         const vestYearsEl = document.getElementById('vestingYears');
         const cliffEl = document.getElementById('cliffMonths');
         const servedEl = document.getElementById('monthsServed');
@@ -307,10 +307,12 @@
         }
 
         function currencyInput(el){
-            let cursor=el.selectionStart, orig=el.value.length;
-            let v=el.value.replace(/,/g,''); if(/[^0-9.]/.test(v)) v=v.replace(/[^0-9.]/g,'');
-            const num=parseNumber(v); el.value = el.value!=='' ? fmtInt(num) : '';
-            const nlen=el.value.length; if(nlen>orig) cursor+= (nlen-orig); el.setSelectionRange(cursor,cursor);
+            if (el.setSelectionRange) {
+                let cursor=el.selectionStart, orig=el.value.length;
+                let v=el.value.replace(/,/g,''); if(/[^0-9.]/.test(v)) v=v.replace(/[^0-9.]/g,'');
+                const num=parseNumber(v); el.value = el.value!=='' ? fmtInt(num) : '';
+                const nlen=el.value.length; if(nlen>orig) cursor+= (nlen-orig); el.setSelectionRange(cursor,cursor);
+            }
         }
 
         function roundDilution(stageKey){
@@ -341,7 +343,7 @@
             const taxPct = clampPercent(parseNumber(taxEl.value));
             const exitVal = parseNumber(exitEl.value);
             const prefStack = parseNumber(prefEl.value);
-            const stageKey = stageHidden.value;
+            const stageKey = fundingStageEl.value;
             const vestYears = parseNumber(vestYearsEl.value);
             const cliffMonths = parseNumber(cliffEl.value);
             const servedMonths = parseNumber(servedEl.value);
@@ -440,12 +442,7 @@
             });
         });
 
-        stageWrap.addEventListener('click', e=>{
-            const btn=e.target.closest('button[data-value]'); if(!btn) return;
-            stageWrap.querySelectorAll('.pill').forEach(b=>{ b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
-            btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
-            stageHidden.value=btn.dataset.value; calculate();
-        });
+        fundingStageEl.addEventListener('change', calculate);
 
         document.querySelectorAll('input.offer-input').forEach(input=>{
             if(['yourOwnership','vestingYears','cliffMonths','monthsServed','fmv','strike','taxPct','dSeed','dA','dB','dC','poolTopUp','yearsToExit','discRate'].includes(input.id)) return;
